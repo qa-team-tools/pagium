@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+export NOSE_PARAMETERIZED_NO_WARN=1
+
+if ! docker ps | grep pagium-selenium-standalone > /dev/null; then
+    docker run --name pagium-selenium-standalone -p 4444:4444 -d selenium/standalone-chrome-debug > /dev/null
+    sleep 5
+fi
+
+cd $(readlink -f $(dirname ${0})) && python3.7 -m nose --with-allure -v --logdir ./.report $@ ./tests
+
+docker rm -f pagium-selenium-standalone > /dev/null

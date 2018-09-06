@@ -1,0 +1,12 @@
+.report
+.pytest_cache
+
+*.py[cod]
+
+me_tools/
+.idea/
+.eggs/
+dist/
+.test/
+*.egg-info/
+*.retry
