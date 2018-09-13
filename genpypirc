@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eu
+
+cat > ~/.pypirc << EOL
+[distutils]
+index-servers =
+    pypi
+
+[pypi]
+repository: https://upload.pypi.org/legacy/
+username: ${PYPI_USER}
+password: ${PYPI_PASSWORD}
+EOL

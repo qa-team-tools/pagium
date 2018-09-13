@@ -2,11 +2,24 @@
 
 set -e
 
-if ! docker ps | grep pagium-selenium-standalone > /dev/null; then
-    docker run --name pagium-selenium-standalone -p 4444:4444 -d selenium/standalone-chrome-debug > /dev/null
-    sleep 5
+MAX_TRIES=30
+
+tries=0
+
+while [ ${tries} -lt ${MAX_TRIES} ]; do
+    if ! curl --silent localhost:4444 > /dev/null; then
+        let tries+=1
+        echo "Selenium server is not allowed by tcp on localhost:4444"
+        echo "Retry..."
+        sleep 1
+    else
+        break
+    fi
+done
+
+if [ ${tries} -ge ${MAX_TRIES} ]; then
+    echo "Selenium server is not allowed"
+    exit 1
 fi
 
 cd $(readlink -f $(dirname ${0})) && python3.7 -m doctest $@ ./pagium/*.py
-
-docker rm -f pagium-selenium-standalone > /dev/null

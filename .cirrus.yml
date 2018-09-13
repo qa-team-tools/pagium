@@ -1,0 +1,44 @@
+container:
+  image: python:3.7
+  additional_containers:
+    - name: chrome
+      image: selenium/standalone-chrome-debug
+      port: 4444
+
+tests_task:
+  timeout_in: 10m
+  script:
+    - pip install . -U
+    - ./runtests -v
+
+pytest_example_task:
+  timeout_in: 10m
+  depends_on:
+    - tests
+  script:
+    - pip install -r examples/pytest_example/requirements.txt
+    - ./examples/pytest_example/runtests
+
+nose_example_task:
+  timeout_in: 10m
+  depends_on:
+    - pytest_example
+  script:
+    - pip install -r examples/nosetest_example/requirements.txt
+    - ./examples/nosetest_example/runtests
+
+do_release_task:
+  timeout_in: 5m
+  only_if: $CIRRUS_BRANCH == 'master'
+  environment:
+    PYPI_USER: ENCRYPTED[d4a34be54d8ec1fcaad4fbb51a9c22533a4d9c312ea75b01618cc9c0c6447fc58398e8a48f4d7b4d8f885f50c1be99ba]
+    PYPI_PASSWORD: ENCRYPTED[477634ecea7f2d46d9b1eb395130934c81596b073ce97a53bbe0238f5b1692a0bed5858d00a0c017bc2f81c2ccd1c9d3]
+  depends_on:
+    - tests
+    - pytest_example
+    - nose_example
+  script:
+    - pip install twine
+    - ./genpypirc
+    - python setup.py sdist
+    - twine upload dist/* || true
