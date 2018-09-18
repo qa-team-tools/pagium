@@ -49,4 +49,4 @@ do_release_task:
     - pip install twine
     - ./genpypirc
     - python setup.py sdist
-    - twine upload dist/* || true
+    - twine upload dist/*
