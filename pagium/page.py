@@ -128,10 +128,10 @@ class Page:
 class PageElement:
 
     def __init__(self,
-                 we_class: type=None,
-                 by: str=None,
-                 value: str=None,
-                 is_list: bool=False):
+                 we_class: type = None,
+                 by: str = None,
+                 value: str = None,
+                 is_list: bool = False):
         if we_class is not None:
             if not issubclass(we_class, WebElement):
                 raise AssertionError(
@@ -232,7 +232,7 @@ class LazyWebElement:
         if self._web_element is None:
             self._web_element = self._page_element.get(self._parent)
 
-    def exists(self, count: int=1) -> bool:
+    def exists(self, count: int = 1) -> bool:
         self.refresh()
 
         try:

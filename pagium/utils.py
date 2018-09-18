@@ -24,8 +24,8 @@ DEFAULT_POLLING_DELAY = 0.5
 
 
 def polling(callback: Callable,
-            timeout: Union[float, int]=DEFAULT_POLLING_TIMEOUT,
-            delay: Union[float, int]=DEFAULT_POLLING_DELAY,
+            timeout: Union[float, int] = DEFAULT_POLLING_TIMEOUT,
+            delay: Union[float, int] = DEFAULT_POLLING_DELAY,
             except_exceptions=DEFAULT_POLLING_EXCEPTIONS):
     def wrapper(f):
         @wraps(f)
@@ -53,12 +53,12 @@ def polling(callback: Callable,
 
 
 def waiting_for(callback: Callable,
-                timeout: Union[float, int]=DEFAULT_POLLING_TIMEOUT,
-                delay: Union[float, int]=DEFAULT_POLLING_DELAY,
+                timeout: Union[float, int] = DEFAULT_POLLING_TIMEOUT,
+                delay: Union[float, int] = DEFAULT_POLLING_DELAY,
                 raise_exc=None,
-                message: str=None,
-                args: Union[float, int]=None,
-                kwargs: dict=None):
+                message: str = None,
+                args: Union[float, int] = None,
+                kwargs: dict = None):
     result = None
 
     args = args or tuple()

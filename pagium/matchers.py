@@ -15,7 +15,7 @@ DEFAULT_DELAY = 0.5
 
 class _HasText(BaseMatcher):
 
-    def __init__(self, text: str, timeout: int=DEFAULT_TIMEOUT, delay: float=DEFAULT_DELAY):
+    def __init__(self, text: str, timeout: int = DEFAULT_TIMEOUT, delay: float = DEFAULT_DELAY):
         self.text = text
         self.timeout = timeout
         self.delay = delay
@@ -38,7 +38,7 @@ has_text = _HasText
 
 class _ElementExists(BaseMatcher):
 
-    def __init__(self, count: int=1, timeout: int=DEFAULT_TIMEOUT, delay: float=DEFAULT_DELAY):
+    def __init__(self, count: int = 1, timeout: int = DEFAULT_TIMEOUT, delay: float = DEFAULT_DELAY):
         self.count = count
         self.timeout = timeout
         self.delay = delay

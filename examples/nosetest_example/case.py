@@ -33,4 +33,3 @@ class PagiumTestSuite(TestCase):
                 )
         finally:
             self.browser.quit()
-

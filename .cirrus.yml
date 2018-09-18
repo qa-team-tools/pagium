@@ -5,8 +5,16 @@ container:
       image: selenium/standalone-chrome-debug
       port: 4444
 
+pep8_task:
+  timeout_in: 10m
+  script:
+    - pip install git+https://gitlab.com/pycqa/flake8#egg=flake8
+    - flake8 --ignore="E501" ./
+
 tests_task:
   timeout_in: 10m
+  depends_on:
+    - pep8
   script:
     - pip install . -U
     - ./runtests -v

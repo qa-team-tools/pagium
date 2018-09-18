@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from typing import Union
 from contextlib import contextmanager
 
 from selenium.webdriver import (
@@ -42,7 +43,9 @@ class WEbDriverPollingMixin:
             self._enable_polling = ep
 
     @contextmanager
-    def enable_polling(self, timeout=utils.DEFAULT_POLLING_TIMEOUT, delay=utils.DEFAULT_POLLING_DELAY):
+    def enable_polling(self,
+                       timeout: Union[int, float] = utils.DEFAULT_POLLING_TIMEOUT,
+                       delay: Union[int, float] = utils.DEFAULT_POLLING_DELAY):
         pt, pd, ep = self._polling_timeout, self._polling_delay, self._enable_polling
         self._polling_timeout, self._polling_delay, self._enable_polling = timeout, delay, True
 
