@@ -1,9 +1,7 @@
 # -*- coding: utf8 -*-
 
-import json
 import pytest
 from _pytest.config import argparsing
-from allure.constants import AttachmentType
 
 from pagium import Remote
 
@@ -51,20 +49,7 @@ def browser(request, hub_tcp, browser_name):
     )
     driver.maximize_window()
 
-    def finalizer():
-        try:
-            pytest.allure.attach(
-                'Screenshoot', driver.get_screenshot_as_png(), AttachmentType.PNG,
-            )
-
-            for log_type in driver.log_types:
-                content = json.dumps(driver.get_log(log_type), indent=2)
-                pytest.allure.attach(
-                    'Got {} log'.format(log_type), content, AttachmentType.JSON,
-                )
-        finally:
-            driver.quit()
-
-    request.addfinalizer(finalizer)
-
-    yield driver
+    try:
+        yield driver
+    finally:
+        driver.quit()

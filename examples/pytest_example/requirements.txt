@@ -2,5 +2,3 @@ pytest
 pagium
 pyhamcrest
 pytest-allure-adaptor
-pytest-xdist
-pytest-rerunfailures
