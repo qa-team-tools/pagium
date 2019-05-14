@@ -11,9 +11,6 @@ from pagium.page import Page, PageElement, WebElement
 from pagium.webdriver import Remote, Chrome, Firefox, PhantomJS, Opera, Safari
 
 
-__version__ = '0.0.5'
-
-
 __all__ = [
     'By',
     'Page',

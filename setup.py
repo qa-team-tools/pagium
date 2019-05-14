@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
 import os
 
 from setuptools import setup
@@ -15,17 +14,14 @@ README_FILE = os.path.join(
 )
 
 
-with open('pagium/__init__.py') as fp:
-    __version__ = re.search(r"__version__\s*=\s*'(.*)'", fp.read(), re.M).group(1)
-
-
 with open(README_FILE) as fp:
     __description__ = fp.read()
 
 
 setup(
     name='pagium',
-    version=__version__,
+    version_format='{tag}',
+    setup_requires=['setuptools-git-version'],
     url='https://github.com/pagium/pagium',
     packages=find_packages(include=('pagium',)),
     description='Selenium page object implementation',
