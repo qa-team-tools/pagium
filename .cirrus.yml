@@ -16,7 +16,7 @@ tests_task:
   depends_on:
     - pep8
   script:
-    - pip install . -U
+    - pip install selenium pyhamcrest -U
     - ./runtests -v
 
 pytest_example_task:
@@ -24,7 +24,7 @@ pytest_example_task:
   depends_on:
     - tests
   script:
-    - pip install -r examples/pytest_example/requirements.txt
+    - pip install -r examples/pytest_example/requirements.txt -U
     - ./examples/pytest_example/runtests
 
 nose_example_task:
@@ -32,7 +32,7 @@ nose_example_task:
   depends_on:
     - pytest_example
   script:
-    - pip install -r examples/nosetest_example/requirements.txt
+    - pip install -r examples/nosetest_example/requirements.txt -U
     - ./examples/nosetest_example/runtests
 
 do_release_task:
