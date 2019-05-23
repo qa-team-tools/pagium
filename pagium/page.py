@@ -152,8 +152,13 @@ class PageElement:
         we_class = self._we_class or WebElement
         return f'{we_class.__name__}: {self._by}={self._value} '
 
-    def __get__(self, instance: Page, owner: type):
-        return LazyWebElement(self, instance.parent)
+    def __get__(self, instance: Union[Page, WebElement], owner: type):
+        parent = instance
+
+        if isinstance(instance, Page):
+            parent = instance.parent
+
+        return LazyWebElement(self, parent)
 
     @property
     def by(self):
