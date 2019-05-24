@@ -43,7 +43,7 @@
 >>> wd.quit()
 """
 
-from typing import Union
+from typing import Union, Callable
 from urllib.parse import urljoin
 
 from selenium.common.exceptions import WebDriverException
@@ -131,7 +131,8 @@ class PageElement:
                  we_class: type = None,
                  by: str = None,
                  value: str = None,
-                 is_list: bool = False):
+                 is_list: bool = False,
+                 hook: Callable = None):
         if we_class is not None:
             if not issubclass(we_class, WebElement):
                 raise AssertionError(
@@ -147,6 +148,7 @@ class PageElement:
         self._by = by
         self._value = value
         self._is_list = is_list
+        self._hook = hook
 
     def __repr__(self):
         we_class = self._we_class or WebElement
@@ -158,14 +160,19 @@ class PageElement:
         if isinstance(instance, Page):
             parent = instance.parent
 
-        return LazyWebElement(self, parent)
+        lazy_web_element = LazyWebElement(self, parent)
+
+        if callable(self._hook):
+            return self._hook(lazy_web_element)
+
+        return lazy_web_element
 
     @property
     def by(self):
         return self._by
 
     @property
-    def we_type(self):
+    def we_class(self):
         return self._we_class
 
     @property
