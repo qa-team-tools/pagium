@@ -20,6 +20,15 @@ class _BasePagiumMatcher(BaseMatcher):
         self.timeout = timeout
         self.delay = delay
 
+    def __matches__(self, *args, **kwargs):
+        pass
+
+    def _matches(self, *args, **kwargs):
+        return utils.waiting_for(
+            self.__matches__, args=args, kwargs=kwargs,
+            timeout=self.timeout, delay=self.delay,
+        )
+
 
 class _HasText(_BasePagiumMatcher):
 
@@ -28,12 +37,8 @@ class _HasText(_BasePagiumMatcher):
 
         self.text = text
 
-    def _matches(self, instance: Union[Page, WebElement, LazyWebElement]):
-        return utils.waiting_for(
-            lambda: str(self.text).lower() in str(instance.text).lower(),
-            timeout=self.timeout,
-            delay=self.delay,
-        )
+    def __matches__(self, instance: Union[Page, WebElement, LazyWebElement]):
+        return str(self.text).lower() in str(instance.text).lower()
 
     def describe_to(self, description):
         description.append_text(
@@ -51,19 +56,16 @@ class _ElementExists(_BasePagiumMatcher):
 
         self.count = count
 
-    def _matches(self, lazy_web_element: LazyWebElement):
+    def __matches__(self, lazy_web_element: LazyWebElement):
         driver = utils.get_driver(lazy_web_element.parent)
 
-        def exists():
-            if hasattr(driver, 'disable_polling'):
-                with driver.disable_polling():
-                    result = lazy_web_element.exists(self.count)
-            else:
+        if hasattr(driver, 'disable_polling'):
+            with driver.disable_polling():
                 result = lazy_web_element.exists(self.count)
+        else:
+            result = lazy_web_element.exists(self.count)
 
-            return result
-
-        return utils.waiting_for(exists, timeout=self.timeout, delay=self.delay)
+        return result
 
     def describe_to(self, description):
         description.append_text(
@@ -80,18 +82,19 @@ class _URLPathEqual(_BasePagiumMatcher):
         super(_URLPathEqual, self).__init__(**kwargs)
 
         self.url_path = url_path
+        self.current_path = None
 
-    def _matches(self, browser):
-        return utils.waiting_for(
-            lambda: self.url_path == urlparse(browser.current_url).path,
-            timeout=self.timeout,
-            delay=self.delay,
-        )
+    def __matches__(self, browser):
+        self.current_path = urlparse(browser.current_url).path
+        return self.url_path == self.current_path
 
     def describe_to(self, description):
         description.append_text(
-            f'Current path is not equal to "{self.url_path}"',
+            f'Current path equal to "{self.url_path}" (timeout: {self.timeout}, delay: {self.delay})',
         )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text(f'was "{self.current_path}"')
 
 
 url_path_equal = _URLPathEqual
@@ -103,18 +106,19 @@ class _URLPathContains(_BasePagiumMatcher):
         super(_URLPathContains, self).__init__(**kwargs)
 
         self.url_path_part = url_path_part
+        self.current_path = None
 
-    def _matches(self, browser):
-        return utils.waiting_for(
-            lambda: self.url_path_part in urlparse(browser.current_url).path,
-            timeout=self.timeout,
-            delay=self.delay,
-        )
+    def __matches__(self, browser):
+        self.current_path = urlparse(browser.current_url).path
+        return self.url_path_part in self.current_path
 
     def describe_to(self, description):
         description.append_text(
-            f'Current path is not contains "{self.url_path_part}"',
+            f'Current path contains "{self.url_path_part}" (timeout: {self.timeout}, delay: {self.delay})',
         )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text(f'was "{self.current_path}"')
 
 
 url_path_contains = _URLPathContains
