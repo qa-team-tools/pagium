@@ -82,7 +82,7 @@ class _URLPathEqual(_BasePagiumMatcher):
         self.url_path = url_path
 
     def _matches(self, browser):
-        utils.waiting_for(
+        return utils.waiting_for(
             lambda: self.url_path == urlparse(browser.current_url).path,
             timeout=self.timeout,
             delay=self.delay,
@@ -106,7 +106,7 @@ class _URLPathContains(_BasePagiumMatcher):
         self.url_path_part = url_path_part
 
     def _matches(self, browser):
-        utils.waiting_for(
+        return utils.waiting_for(
             lambda: self.url_path_part in urlparse(browser.current_url).path,
             timeout=self.timeout,
             delay=self.delay,
