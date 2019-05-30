@@ -21,7 +21,6 @@ class _BasePagiumMatcher(BaseMatcher):
         self.delay = delay
 
 
-
 class _HasText(_BasePagiumMatcher):
 
     def __init__(self, text: str, **kwargs):
@@ -73,7 +72,6 @@ class _ElementExists(_BasePagiumMatcher):
 
 
 element_exists = _ElementExists
-
 
 
 class _URLPathEqual(_BasePagiumMatcher):
