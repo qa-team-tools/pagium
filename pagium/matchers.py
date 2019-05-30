@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 from typing import Union
+from urllib.parse import urlparse
 
 from hamcrest.core.base_matcher import BaseMatcher
 from selenium.webdriver.remote.webelement import WebElement
@@ -13,12 +14,20 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_DELAY = 0.5
 
 
-class _HasText(BaseMatcher):
+class _BasePagiumMatcher(BaseMatcher):
 
-    def __init__(self, text: str, timeout: int = DEFAULT_TIMEOUT, delay: float = DEFAULT_DELAY):
-        self.text = text
+    def __init__(self, *, timeout: int = DEFAULT_TIMEOUT, delay: float = DEFAULT_DELAY):
         self.timeout = timeout
         self.delay = delay
+
+
+
+class _HasText(_BasePagiumMatcher):
+
+    def __init__(self, text: str, **kwargs):
+        super(_HasText, self).__init__(**kwargs)
+
+        self.text = text
 
     def _matches(self, instance: Union[Page, WebElement, LazyWebElement]):
         return utils.waiting_for(
@@ -36,12 +45,12 @@ class _HasText(BaseMatcher):
 has_text = _HasText
 
 
-class _ElementExists(BaseMatcher):
+class _ElementExists(_BasePagiumMatcher):
 
-    def __init__(self, count: int = 1, timeout: int = DEFAULT_TIMEOUT, delay: float = DEFAULT_DELAY):
+    def __init__(self, count: int = 1, **kwargs):
+        super(_ElementExists, self).__init__(**kwargs)
+
         self.count = count
-        self.timeout = timeout
-        self.delay = delay
 
     def _matches(self, lazy_web_element: LazyWebElement):
         driver = utils.get_driver(lazy_web_element.parent)
@@ -64,3 +73,52 @@ class _ElementExists(BaseMatcher):
 
 
 element_exists = _ElementExists
+
+
+
+class _URLPathEqual(_BasePagiumMatcher):
+
+    def __init__(self, url_path: str, **kwargs):
+        super(_URLPathEqual, self).__init__(**kwargs)
+
+        self.url_path = url_path
+
+    def _matches(self, browser):
+        utils.waiting_for(
+            lambda: self.url_path == urlparse(browser.current_url).path,
+            timeout=self.timeout,
+            delay=self.delay,
+            raise_exc=AssertionError,
+        )
+
+    def describe_to(self, description):
+        description.append_text(
+            f'Current path is not equal to "{self.url_path}"',
+        )
+
+
+url_path_equal = _URLPathEqual
+
+
+class _URLPathContains(_BasePagiumMatcher):
+
+    def __init__(self, url_path_part: str, **kwargs):
+        super(_URLPathContains, self).__init__(**kwargs)
+
+        self.url_path_part = url_path_part
+
+    def _matches(self, browser):
+        utils.waiting_for(
+            lambda: self.url_path_part in urlparse(browser.current_url).path,
+            timeout=self.timeout,
+            delay=self.delay,
+            raise_exc=AssertionError,
+        )
+
+    def describe_to(self, description):
+        description.append_text(
+            f'Current path is not contains "{self.url_path_part}"',
+        )
+
+
+url_path_contains = _URLPathContains
