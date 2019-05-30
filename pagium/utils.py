@@ -57,7 +57,7 @@ def waiting_for(callback: Callable,
                 delay: Union[float, int] = DEFAULT_POLLING_DELAY,
                 raise_exc=None,
                 message: str = None,
-                args: Union[float, int] = None,
+                args: Union[list, tuple] = None,
                 kwargs: dict = None):
     result = None
 
