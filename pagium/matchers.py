@@ -86,7 +86,6 @@ class _URLPathEqual(_BasePagiumMatcher):
             lambda: self.url_path == urlparse(browser.current_url).path,
             timeout=self.timeout,
             delay=self.delay,
-            raise_exc=AssertionError,
         )
 
     def describe_to(self, description):
@@ -110,7 +109,6 @@ class _URLPathContains(_BasePagiumMatcher):
             lambda: self.url_path_part in urlparse(browser.current_url).path,
             timeout=self.timeout,
             delay=self.delay,
-            raise_exc=AssertionError,
         )
 
     def describe_to(self, description):
