@@ -29,6 +29,12 @@ class _BasePagiumMatcher(BaseMatcher):
             timeout=self.timeout, delay=self.delay,
         )
 
+    def _create_message(self, text, **params):
+        params.update(timeout=self.timeout, delay=self.delay)
+        params_string = ', '.join(f'{k}={v}' for k, v in params.items())
+
+        return f'{text} ({params_string})'
+
 
 class _HasText(_BasePagiumMatcher):
 
@@ -42,8 +48,11 @@ class _HasText(_BasePagiumMatcher):
 
     def describe_to(self, description):
         description.append_text(
-            f'Text "{self.text}" exists on page (timeout: {self.timeout}, delay: {self.delay})',
+            self._create_message(f'Text "{self.text}" exists'),
         )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text('was not fond')
 
 
 has_text = _HasText
@@ -69,8 +78,11 @@ class _ElementExists(_BasePagiumMatcher):
 
     def describe_to(self, description):
         description.append_text(
-            f'Web element exists on page (timeout: {self.timeout}, delay: {self.delay}, count: {self.count})',
+            self._create_message('Web element exists', count=self.count),
         )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text('was not fond')
 
 
 element_exists = _ElementExists
@@ -90,7 +102,7 @@ class _URLPathEqual(_BasePagiumMatcher):
 
     def describe_to(self, description):
         description.append_text(
-            f'Current path equal to "{self.url_path}" (timeout: {self.timeout}, delay: {self.delay})',
+            self._create_message(f'Current path equal to "{self.url_path}"'),
         )
 
     def describe_mismatch(self, item, mismatch_description):
@@ -114,7 +126,7 @@ class _URLPathContains(_BasePagiumMatcher):
 
     def describe_to(self, description):
         description.append_text(
-            f'Current path contains "{self.url_path_part}" (timeout: {self.timeout}, delay: {self.delay})',
+            self._create_message(f'Current path contains "{self.url_path_part}"'),
         )
 
     def describe_mismatch(self, item, mismatch_description):
