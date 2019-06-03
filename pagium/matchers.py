@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 
+import re
 from typing import Union
 from urllib.parse import urlparse
 
@@ -134,3 +135,26 @@ class _URLPathContains(_BasePagiumMatcher):
 
 
 url_path_contains = _URLPathContains
+
+
+class _MatchRegexp(_BasePagiumMatcher):
+
+    def __init__(self, regexp, **kwargs):
+        super(_MatchRegexp, self).__init__(**kwargs)
+
+        self.pattern = re.compile(regexp)
+
+    def __matches__(self, instance):
+        self.text = instance.text
+        return self.pattern.search(self.text) is not None
+
+    def describe_to(self, description):
+        description.append_text(
+            self._create_message(f'a element text matching "{self.pattern.pattern}"'),
+        )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text(f'was "{self.text}"')
+
+
+match_regexp = _MatchRegexp

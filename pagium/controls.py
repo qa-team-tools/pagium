@@ -11,6 +11,7 @@ class Input(WebElement):
         return self.get_attribute('value')
 
     def fill(self, text: str):
+        self.clear()
         self.send_keys(*text)
 
 
