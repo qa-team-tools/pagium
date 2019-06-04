@@ -13,7 +13,8 @@ pip install pagium
 How to use
 ==========
 
-1. Basic usage
+Basic usage
+-----------
 
 ```python
 from pagium import Page, PageElement, By, Remote
@@ -33,68 +34,58 @@ with GooglePage(wd, 'https://google.com') as page:
     page.search.send_keys(*'python selenium')
 ```
 
-2. Controls usage
+Controls usage
+--------------
 
 ```python
-from pagium import Page, PageElement, WebElement, By, Remote, Keys
-
-
-class SearchInput(WebElement):
-
-    def fill(self, text):
-        self.send_keys(*text + Keys.ENTER)
+from pagium import Page, PageElement, By, controls
 
 
 class GooglePage(Page):
 
-    search = PageElement(SearchInput, by=By.NAME, value='q')
-
-
-wd = Remote(
-    command_executor='http://localhost:4444/wd/hub',
-    desired_capabilities={'browserName': 'chrome'},
-)
-
-with GooglePage(wd, 'https://google.com') as page:
-    page.search.fill('python selenium')
+    search = PageElement(controls.Input, by=By.NAME, value='q')
 ```
 
-3. Container usage
+Container usage
+---------------
 
 ```python
-from pagium import Page, PageElement, WebElement, By, Remote, Keys
-
-
-class SearchInput(WebElement):
-
-    def fill(self, text):
-        self.send_keys(*text + Keys.ENTER)
+from pagium import Page, PageElement, WebElement, By, controls
 
 
 class SearchForm(WebElement):
 
-    input = PageElement(SearchInput, by=By.NAME, value='q')
+    input = PageElement(controls.Input, by=By.NAME, value='q')
 
 
 class GooglePage(Page):
 
     search_form = PageElement(SearchForm)
-
-
-wd = Remote(
-    command_executor='http://localhost:4444/wd/hub',
-    desired_capabilities={'browserName': 'chrome'},
-)
-
-with GooglePage(wd, 'https://google.com') as page:
-    page.search_form.input('python selenium')
 ```
 
-4. Web driver polling
+Page element hook
+-----------------
+
+```python
+from pagium import PageElement, WebElement, By, Keys, controls
+
+
+class SearchForm(WebElement):
+
+    input = PageElement(controls.Input, by=By.NAME, value='q')
+
+    submit = PageElement(by=By.NAME, value='q', hook=lambda we: we.send_keys(Keys.ENTER))
+```
+
+Web driver polling
+------------------
 
 Pagium has feature polling for web drivers
 
 ```python
+from pagium import Remote
+
+
 wd = Remote(
     command_executor='http://localhost:4444/wd/hub',
     desired_capabilities={'browserName': 'chrome'},
@@ -108,6 +99,9 @@ Polling timeout is retry time for a while command execution raising error and de
 It can be using like
 
 ```python
+from pagium import Remote
+
+
 wd = Remote(
     command_executor='http://localhost:4444/wd/hub',
     desired_capabilities={'browserName': 'chrome'},
@@ -120,6 +114,9 @@ with wd.enable_polling(20, delay=0.1):
 or like
 
 ```python
+from pagium import Remote
+
+
 wd = Remote(
     command_executor='http://localhost:4444/wd/hub',
     desired_capabilities={'browserName': 'chrome'},
@@ -131,40 +128,17 @@ with wd.disable_polling():
     ...
 ```
 
-5. Assert matchers
+Assert matchers
+---------------
 
 ```python
 from hamcrest import assert_that
-from pagium.matchers import has_text, element_exists
-from pagium import Page, PageElement, WebElement, By, Keys, Remote
+from pagium.matchers import element_exists, has_text, match_regexp, url_path_equal, url_path_contains
 
 
-class SearchInput(WebElement):
-
-    def fill(self, text):
-        self.send_keys(*text + Keys.ENTER)
-
-
-class SearchForm(WebElement):
-
-    input = PageElement(SearchInput, by=By.NAME, value='q')
-
-
-class GoogleSearchPage(Page):
-
-    __path__ = '/'
-
-    search_form = PageElement(SearchForm)
-    result_container = PageElement(by=By.ID, value='center_col')
-
-
-wd = Remote(
-    command_executor='http://localhost:4444/wd/hub',
-    desired_capabilities={'browserName': 'chrome'},
-)
-
-with GoogleSearchPage(wd, 'https://google.com') as page:
-    page.search_form.input.fill('page object')
-
-assert_that(page.result_container, element_exists(), has_text('page object'))
+assert_that(page, url_path_contains('/se'))
+assert_that(page, url_path_equal('/search'))
+assert_that(page.result_container, element_exists())
+assert_that(page.result_container, match_regexp('[a-z]+'))
+assert_that(page.result_container, has_text('page object'))
 ```

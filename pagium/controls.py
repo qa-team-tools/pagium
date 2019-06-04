@@ -39,9 +39,9 @@ class Select(WebElement):
     def selected(self):
         return next(iter([option for option in self.options if option.is_selected()]), None)
 
-    def select(self, value):
+    def select(self, value, by='value'):
         for option in self.options:
-            if (option.get_attribute('value') == value) or (option.text == value):
+            if (by == 'value' and option.get_attribute('value') == value) or (by == 'text' and option.text == value):
                 option.click()
                 break
         else:
