@@ -221,6 +221,10 @@ class LazyWebElement:
         self._search()
         return f'{self.__class__.__name__} -> {repr(self._web_element)}'
 
+    def __iter__(self):
+        self._search()
+        return iter(self._web_element)
+
     def __getattr__(self, item):
         self._search()
         return getattr(self._web_element, item)
@@ -236,13 +240,13 @@ class LazyWebElement:
 
         return 1
 
-    @property
-    def parent(self):
-        return self._parent
-
     def _search(self):
         if self._web_element is None:
             self._web_element = self._page_element.get(self._parent)
+
+    @property
+    def parent(self):
+        return self._parent
 
     def exists(self, count: int = 1) -> bool:
         self.refresh()
