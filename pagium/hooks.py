@@ -10,6 +10,9 @@ class BasePageElementHook:
     def __init__(self, web_element: LazyWebElement):
         self.web_element = web_element
 
+    def __repr__(self):
+        return f'Hook: {self.__class__.__name__}'
+
 
 class ClickActionHook(BasePageElementHook):
 
