@@ -14,7 +14,6 @@ class BasePageElementHook:
 class ClickActionHook(BasePageElementHook):
 
     def __call__(self):
-        self.web_element.refresh()
         self.web_element.click()
 
 
