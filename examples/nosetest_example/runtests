@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-export NOSE_PARAMETERIZED_NO_WARN=1
-
-cd $(readlink -f $(dirname ${0})) && python3.7 -m nose --with-allure -v --logdir ./.report $@ ./tests

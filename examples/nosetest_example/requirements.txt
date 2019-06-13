@@ -1,5 +1,0 @@
-nose
-pagium
-pyhamcrest
-nose-parameterized
-nose-allure-plugin

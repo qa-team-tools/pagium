@@ -1,4 +1,0 @@
-pytest
-pagium
-pyhamcrest
-pytest-allure-adaptor
