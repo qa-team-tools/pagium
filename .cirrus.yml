@@ -2,7 +2,7 @@ container:
   image: python:3.7
   additional_containers:
     - name: chrome
-      image: selenium/standalone-chrome-debug
+      image: selenium/standalone-chrome
       port: 4444
 
 pep8_task:
