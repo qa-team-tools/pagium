@@ -22,6 +22,9 @@ class WEbDriverPollingMixin:
         self._polling_delay = kwargs.pop('polling_delay', utils.DEFAULT_POLLING_DELAY)
         self._enable_polling = True if self._polling_timeout else False
 
+        self._implicitly_wait = 0
+        self._set_script_timeout = 0
+
         with self.disable_polling():
             super(WEbDriverPollingMixin, self).__init__(*args, **kwargs)
 
@@ -34,13 +37,25 @@ class WEbDriverPollingMixin:
         return self._polling_delay
 
     @contextmanager
-    def disable_polling(self):
+    def disable_polling(self, *, force=False):
+        implicitly_wait = script_timeout = 0
+
+        if force:
+            implicitly_wait, script_timeout = self._implicitly_wait, self._set_script_timeout
+            self.implicitly_wait(0)
+            self.set_script_timeout(0)
+
         ep = self._enable_polling
         self._enable_polling = False
+
         try:
             yield
         finally:
             self._enable_polling = ep
+
+            if force:
+                self.implicitly_wait(implicitly_wait)
+                self.set_script_timeout(script_timeout)
 
     @contextmanager
     def enable_polling(self,
@@ -64,6 +79,14 @@ class WEbDriverPollingMixin:
             execute = super(WEbDriverPollingMixin, self).execute
 
         return execute(*args, **kwargs)
+
+    def implicitly_wait(self, wait_timeout):
+        self._implicitly_wait = wait_timeout
+        super(WEbDriverPollingMixin, self).implicitly_wait(self._implicitly_wait)
+
+    def set_script_timeout(self, wait_timeout):
+        self._set_script_timeout = wait_timeout
+        super(WEbDriverPollingMixin, self).set_script_timeout(self._set_script_timeout)
 
 
 class Remote(WEbDriverPollingMixin, _Remote):

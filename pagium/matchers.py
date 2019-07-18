@@ -70,7 +70,7 @@ class _ElementExists(_BasePagiumMatcher):
         driver = utils.get_driver(lazy_web_element.parent)
 
         if hasattr(driver, 'disable_polling'):
-            with driver.disable_polling():
+            with driver.disable_polling(force=True):
                 result = lazy_web_element.exists(self.count)
         else:
             result = lazy_web_element.exists(self.count)
@@ -83,10 +83,40 @@ class _ElementExists(_BasePagiumMatcher):
         )
 
     def describe_mismatch(self, item, mismatch_description):
-        mismatch_description.append_text('was not fond')
+        mismatch_description.append_text('was not found')
 
 
 element_exists = _ElementExists
+
+
+class _ElementNotExists(_BasePagiumMatcher):
+
+    def __init__(self, count: int = 1, **kwargs):
+        super(_ElementNotExists, self).__init__(**kwargs)
+
+        self.count = count
+
+    def __matches__(self, lazy_web_element: LazyWebElement):
+        driver = utils.get_driver(lazy_web_element.parent)
+
+        if hasattr(driver, 'disable_polling'):
+            with driver.disable_polling(force=True):
+                result = not lazy_web_element.exists(self.count)
+        else:
+            result = not lazy_web_element.exists(self.count)
+
+        return result
+
+    def describe_to(self, description):
+        description.append_text(
+            self._create_message('Web element not exists', count=self.count),
+        )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text('was found')
+
+
+element_not_exists = _ElementNotExists
 
 
 class _URLPathEqual(_BasePagiumMatcher):
