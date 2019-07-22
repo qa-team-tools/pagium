@@ -53,7 +53,7 @@ class _HasText(_BasePagiumMatcher):
         )
 
     def describe_mismatch(self, item, mismatch_description):
-        mismatch_description.append_text('was not fond')
+        mismatch_description.append_text('was not found')
 
 
 has_text = _HasText
@@ -188,3 +188,25 @@ class _MatchRegexp(_BasePagiumMatcher):
 
 
 match_regexp = _MatchRegexp
+
+
+class _TagAttributeEqual(_BasePagiumMatcher):
+
+    def __init__(self, attribute_name, value, **kwargs):
+        super(_TagAttributeEqual, self).__init__(**kwargs)
+        self.attribute_name = attribute_name
+        self.value = value
+
+    def __matches__(self, we: Union[WebElement, LazyWebElement]):
+        return we.get_attribute(self.attribute_name) == self.value
+
+    def describe_to(self, description):
+        description.append_text(
+            self._create_message(f'Attribute value:"{self.value}" equals'),
+        )
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text('was not equals')
+
+
+tag_attribute_equal = _TagAttributeEqual
