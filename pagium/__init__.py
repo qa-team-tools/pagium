@@ -7,9 +7,11 @@ Python page object patter realization for selenium library.
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+from pagium.extend_web_element import extend_web_element
 from pagium.page import Page, PageElement, WebElement
 from pagium.webdriver import Remote, Chrome, Firefox, PhantomJS, Opera, Safari
 
+extend_web_element()
 
 __all__ = [
     'By',
