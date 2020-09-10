@@ -10,6 +10,10 @@ class Input(WebElement):
     def value(self):
         return self.get_attribute('value')
 
+    @property
+    def placeholder(self):
+        return self.get_attribute('placeholder')
+
     def fill(self, text: str):
         self.clear()
         self.send_keys(*text)
