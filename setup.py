@@ -6,6 +6,7 @@ from setuptools import find_packages
 
 setup(
     name='pagium',
+    author='Mikhail Trifonov',
     version_format='{tag}',
     setup_requires=['setuptools-git-version'],
     url='https://github.com/pagium/pagium',
