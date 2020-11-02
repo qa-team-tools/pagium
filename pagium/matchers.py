@@ -41,11 +41,13 @@ class _HasText(_BasePagiumMatcher):
 
     def __init__(self, text: str, **kwargs):
         super(_HasText, self).__init__(**kwargs)
-
         self.text = text
 
     def __matches__(self, instance: Union[Page, WebElement, LazyWebElement]):
-        return str(self.text).lower() in str(instance.text).lower()
+        if isinstance(instance, LazyWebElement):
+            instance.refresh()
+        self.actual_text = instance.text
+        return str(self.text).lower() in str(self.actual_text).lower()
 
     def describe_to(self, description):
         description.append_text(
@@ -53,7 +55,7 @@ class _HasText(_BasePagiumMatcher):
         )
 
     def describe_mismatch(self, item, mismatch_description):
-        mismatch_description.append_text('was not found')
+        mismatch_description.append_text(f'was {self.actual_text}')
 
 
 has_text = _HasText
@@ -175,6 +177,8 @@ class _MatchRegexp(_BasePagiumMatcher):
         self.pattern = re.compile(regexp)
 
     def __matches__(self, instance):
+        if instance(instance, LazyWebElement):
+            instance.refresh()
         self.text = instance.text
         return self.pattern.search(self.text) is not None
 
