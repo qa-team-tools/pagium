@@ -7,7 +7,6 @@ from selenium.webdriver import (
     Remote as _Remote,
     Chrome as _Chrome,
     Firefox as _Firefox,
-    Opera as _Opera,
     Safari as _Safari,
 )
 
@@ -105,10 +104,6 @@ class Chrome(WEbDriverPollingMixin, _Chrome):
 
 
 class Firefox(WEbDriverPollingMixin, _Firefox):
-    pass
-
-
-class Opera(WEbDriverPollingMixin, _Opera):
     pass
 
 
