@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from pagium.page import Page, PageElement, WebElement
-from pagium.webdriver import Remote, Chrome, Firefox, Opera, Safari
+from pagium.webdriver import Remote, Chrome, Firefox, Safari
 
 
 __all__ = [
@@ -19,7 +19,6 @@ __all__ = [
     'Remote',
     'Chrome',
     'Firefox',
-    'Opera',
     'Safari',
     'Keys',
 ]
