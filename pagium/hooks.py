@@ -19,10 +19,12 @@ class ClickActionHook(BasePageElementHook):
     >>> from pagium.webdriver import Remote
     >>> from pagium.page import PageElement, Page
     >>> from selenium.webdriver.common.by import By
+    >>> from selenium.webdriver.chrome.options import Options
 
+    >>> opt = Options()
     >>> wd = Remote(
     ... command_executor='http://localhost:4444/wd/hub',
-    ... desired_capabilities={'browserName': 'chrome'},
+    ... options=opt,
     ... polling_timeout=10,
     ... polling_delay=0.5,
     ... )
@@ -47,10 +49,12 @@ class SendEnterHook(BasePageElementHook):
     >>> from pagium.webdriver import Remote
     >>> from pagium.page import PageElement, Page
     >>> from selenium.webdriver.common.by import By
+    >>> from selenium.webdriver.chrome.options import Options
 
+    >>> opt = Options()
     >>> wd = Remote(
     ... command_executor='http://localhost:4444/wd/hub',
-    ... desired_capabilities={'browserName': 'chrome'},
+    ... options=opt,
     ... polling_timeout=10,
     ... polling_delay=0.5,
     ... )

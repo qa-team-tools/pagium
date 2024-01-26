@@ -16,7 +16,7 @@ setup(
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'selenium',
+        'selenium>=4.17.0,<4.18.0',
         'pyhamcrest',
     ],
     classifiers=(

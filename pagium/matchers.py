@@ -10,7 +10,6 @@ from selenium.webdriver.remote.webelement import WebElement
 from pagium import utils
 from pagium.page import Page, LazyWebElement
 
-
 DEFAULT_TIMEOUT = 30
 DEFAULT_DELAY = 0.5
 

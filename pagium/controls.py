@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
 
@@ -37,7 +37,7 @@ class Select(WebElement):
 
     @property
     def options(self):
-        return self.find_elements_by_tag_name('option')
+        return self.find_elements(by=By.TAG_NAME, value='option')
 
     @property
     def selected(self):

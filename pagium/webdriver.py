@@ -5,9 +5,6 @@ from contextlib import contextmanager
 
 from selenium.webdriver import (
     Remote as _Remote,
-    Chrome as _Chrome,
-    Firefox as _Firefox,
-    Safari as _Safari,
 )
 
 from pagium import utils
@@ -89,23 +86,14 @@ class WEbDriverPollingMixin:
 
 class Remote(WEbDriverPollingMixin, _Remote):
     """
+    >>> from selenium.webdriver.chrome.options import Options
+
+    >>> opt = Options()
     >>> wd = Remote(
     ... command_executor='http://localhost:4444/wd/hub',
-    ... desired_capabilities={'browserName': 'chrome'},
+    ... options=opt,
     ... )
 
     >>> wd.quit()
     """
-    pass
-
-
-class Chrome(WEbDriverPollingMixin, _Chrome):
-    pass
-
-
-class Firefox(WEbDriverPollingMixin, _Firefox):
-    pass
-
-
-class Safari(WEbDriverPollingMixin, _Safari):
     pass

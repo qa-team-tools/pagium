@@ -1,13 +1,13 @@
-
-
 """
 >>> from pagium.webdriver import Remote
 >>> from selenium.webdriver.common.by import By
 >>> from selenium.webdriver.common.keys import Keys
+>>> from selenium.webdriver.chrome.options import Options
 
+>>> opt = Options()
 >>> wd = Remote(
 ... command_executor='http://localhost:4444/wd/hub',
-... desired_capabilities={'browserName': 'chrome'},
+... options=opt,
 ... polling_timeout=10,
 ... polling_delay=0.5,
 ... )
@@ -47,12 +47,12 @@ from typing import Union, Callable
 from urllib.parse import urljoin
 
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 
 class Page:
-
     __path__ = None
 
     def __init__(self, parent: Union[WebDriver, WebElement], url: str, **options):
@@ -99,7 +99,7 @@ class Page:
     @property
     def text(self) -> str:
         if isinstance(self._parent, WebDriver):
-            return str(self._parent.find_element_by_tag_name('body').text)
+            return str(self._parent.find_element(by=By.TAG_NAME, value='body').text)
         return str(self._parent.text)
 
     @property

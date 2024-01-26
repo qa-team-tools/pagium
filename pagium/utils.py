@@ -10,14 +10,12 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
-
 DEFAULT_POLLING_EXCEPTIONS = (
     IOError,
     OSError,
     HTTPException,
     WebDriverException,
 )
-
 
 DEFAULT_POLLING_TIMEOUT = 30
 DEFAULT_POLLING_DELAY = 0.5
@@ -49,6 +47,7 @@ def polling(callback: Callable,
                 raise error
 
         return wrapped
+
     return wrapper(callback)
 
 
