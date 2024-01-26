@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from pagium.page import Page, PageElement, WebElement
-from pagium.webdriver import Remote, WEbDriverPollingMixin
+from pagium.webdriver import Remote, WEbDriverPollingMixin as PagiumDriverMixin
 
 __all__ = [
     'By',
@@ -16,6 +16,6 @@ __all__ = [
     'PageElement',
     'WebElement',
     'Remote',
-    'WEbDriverPollingMixin',
+    'PagiumDriverMixin',
     'Keys',
 ]
